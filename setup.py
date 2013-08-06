@@ -37,10 +37,10 @@ if sys.platform == 'win32' or ('bdist_wininst' in sys.argv):
   BinFiles = ['misc/gerbmerge.bat']
   BinDir = '.'
 else:
-  DestLib = distutils.sysconfig.get_config_var('LIBPYTHON')
+  DestLib = "/usr/local/lib/python2.7/dist-packages/"
   DestDir = os.path.join(DestLib, 'gerbmerge')
   BinFiles = ['misc/gerbmerge']
-  BinDir = distutils.sysconfig.get_config_var('BINDIR')  
+  BinDir = distutils.sysconfig.get_config_var('BINDIR')
 
   # Create top-level invocation program
   fid = file('misc/gerbmerge', 'wt')
@@ -74,7 +74,7 @@ URL below.
        url = "http://ruggedcircuits.com/gerbmerge",
        packages = ['gerbmerge'],
        platforms = ['all'],
-       data_files = [ (DestDir, AuxFiles), 
+       data_files = [ (DestDir, AuxFiles),
                       (os.path.join(DestDir,'testdata'), SampleFiles),
                       (os.path.join(DestDir,'doc'), DocFiles),
                       (BinDir, BinFiles) ]
@@ -111,7 +111,7 @@ if do_fix_perms:
     print
     print '*** Please verify that the installed files have correct permissions. On'
     print "*** systems without permission flags, you don't need to"
-    print '*** worry about it.' 
+    print '*** worry about it.'
 
 if cmd[:7]=='install':
   print
