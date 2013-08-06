@@ -37,7 +37,7 @@ if sys.platform == 'win32' or ('bdist_wininst' in sys.argv):
   BinFiles = ['misc/gerbmerge.bat']
   BinDir = '.'
 else:
-  DestLib = "/usr/local/lib/python2.7/dist-packages/"
+  DestLib = "/usr/local/lib/python2.7/dist-packages"
   DestDir = os.path.join(DestLib, 'gerbmerge')
   BinFiles = ['misc/gerbmerge']
   BinDir = distutils.sysconfig.get_config_var('BINDIR')
@@ -46,7 +46,7 @@ else:
   fid = file('misc/gerbmerge', 'wt')
   fid.write( \
   r"""#!/bin/sh
-python %s/site-packages/gerbmerge/gerbmerge.py $*
+python %s/gerbmerge/gerbmerge.py $*
   """ % DestLib)
   fid.close()
 
