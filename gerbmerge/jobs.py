@@ -268,6 +268,7 @@ class Job:
     # 10. If we get something in M.6 format we must divide by 10, etc.
     x_div = 1.0
     y_div = 1.0
+    unit_div = 1.0
 
     # Drawing commands can be repeated with X or Y omitted if they are
     # the same as before. These variables store the last X/Y value as
@@ -322,6 +323,11 @@ class Job:
         if not A:
           raise RuntimeError, "Unknown aperture definition in file %s" % fullname
 
+        if A.dimx != None:
+            A.dimx = A.dimx * unit_div
+        if A.dimy != None:
+            A.dimy = A.dimy * unit_div
+
         hash = A.hash()
         if not RevGAT.has_key(hash):
           #print line
@@ -337,6 +343,11 @@ class Job:
       # Ignore %AMOC8* from Eagle for now as it uses a macro parameter, which
       # is not yet supported in GerbMerge.
       if line[:7]=='%AMOC8*':
+        continue
+
+      # If units are in metric, scale the x- and y-coordinates accordingly
+      if (line[:7] == '%MOMM*%'):
+        unit_div = 1/2.54/10;
         continue
 
       # See if this is an aperture macro definition, and if so, map it.
@@ -520,11 +531,11 @@ class Job:
               self.miny = min(self.miny,0)
               self.maxy = max(self.maxy,0)
 
-          x = int(round(x*x_div))
-          y = int(round(y*y_div))
+          x = int(round(x*x_div*unit_div))
+          y = int(round(y*y_div*unit_div))
           if I is not None:
-            I = int(round(I*x_div))
-            J = int(round(J*y_div))
+            I = int(round(I*x_div*unit_div))
+            J = int(round(J*y_div*unit_div))
             self.commands[layername].append((x,y,I,J,d,circ_signed))
           else:
             self.commands[layername].append((x,y,d))

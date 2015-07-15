@@ -211,6 +211,7 @@ def constructApertureTable(fileList):
   GAMT = config.GAMT    # Global Aperture Macro Table
   GAMT.clear()
   RevGAMT = {}          # Dictionary keyed by aperture macro hash and returning macro name
+  unit_div = 1.0
 
   AT = {}               # Aperture Table for this file
   for fname in fileList:
@@ -230,6 +231,11 @@ def constructApertureTable(fileList):
       # representation to the dictionary. It might already exist.
       # Ignore %AMOC8* from Eagle for now as it uses a macro parameter.
       if line[:7]=='%AMOC8*':
+        continue
+
+      # If units are in metric, scale the x- and y-coordinates accordingly
+      if (line[:7] == '%MOMM*%'):
+        unit_div = 1/2.54/10;
         continue
 
       # parseApertureMacro() sucks up all macro lines up to terminating '%'
@@ -255,6 +261,10 @@ def constructApertureTable(fileList):
         # If this is an aperture definition, add the string representation
         # to the dictionary. It might already exist.
         if A:
+          if A.dimx != None:
+              A.dimx = A.dimx * unit_div
+          if A.dimy != None:
+              A.dimy = A.dimy * unit_div
           AT[A.hash()] = A
 
     fid.close()
