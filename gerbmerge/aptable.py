@@ -156,7 +156,7 @@ class Aperture:
 # that translates macro names local to this file to global names in the GAMT. We make
 # the translation right away so that the return value from this function is an aperture
 # definition with a global macro name, e.g., 'ADD10M5'
-def parseAperture(s, knownMacroNames):
+def parseAperture(s, knownMacroNames, unit_div):
   for ap in Apertures:
     match = ap[1].match(s)
     if match:
@@ -173,9 +173,9 @@ def parseAperture(s, knownMacroNames):
           raise RuntimeError, 'Aperture Macro name "%s" not defined' % dimx
       else:
         try:
-          dimx = float(dimx)
+          dimx = float(dimx)*unit_div
           if dimy:
-            dimy = float(dimy)
+            dimy = float(dimy)*unit_div
         except:
           raise RuntimeError, "Illegal floating point aperture size"
 
@@ -256,15 +256,11 @@ def constructApertureTable(fileList):
           knownMacroNames[localMacroName] = AM.name
           RevGAMT[AM.hash()] = AM.name
       else:
-        A = parseAperture(line, knownMacroNames)
+        A = parseAperture(line, knownMacroNames, unit_div)
 
         # If this is an aperture definition, add the string representation
         # to the dictionary. It might already exist.
         if A:
-          if A.dimx != None:
-              A.dimx = A.dimx * unit_div
-          if A.dimy != None:
-              A.dimy = A.dimy * unit_div
           AT[A.hash()] = A
 
     fid.close()

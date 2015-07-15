@@ -319,14 +319,9 @@ class Job:
         if currtool:
           raise RuntimeError, "File %s has an aperture definition that comes after drawing commands." % fullname
 
-        A = aptable.parseAperture(line, self.apmxlat[layername])
+        A = aptable.parseAperture(line, self.apmxlat[layername], unit_div)
         if not A:
           raise RuntimeError, "Unknown aperture definition in file %s" % fullname
-
-        if A.dimx != None:
-            A.dimx = A.dimx * unit_div
-        if A.dimy != None:
-            A.dimy = A.dimy * unit_div
 
         hash = A.hash()
         if not RevGAT.has_key(hash):
