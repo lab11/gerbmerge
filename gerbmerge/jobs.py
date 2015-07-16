@@ -86,6 +86,9 @@ xzsup_pat = re.compile(r'^INCH,([LT])Z$')      # Leading/trailing zeros INCLUDED
 
 XIgnoreList = ( \
   re.compile(r'^%$'),
+  re.compile(r'^G90$'),   # Absolute Mode
+  re.compile(r'^G05$'),   # Drill Mode
+  re.compile(r'^T0$'),    # Empty Spindle
   re.compile(r'^M30$'),   # End of job
   re.compile(r'^M48$'),   # Program header to first %
   re.compile(r'^M72$')    # Inches
